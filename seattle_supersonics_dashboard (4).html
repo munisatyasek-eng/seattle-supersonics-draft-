@@ -1,0 +1,460 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Seattle SuperSonics: 2024-25 Expansion Draft</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Anton&family=Oswald:wght@400;500;600;700&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --sonic-green-deep:#06231a;
+    --sonic-green:#0a3d2c;
+    --sonic-green-bright:#16734f;
+    --sonic-gold:#fdb927;
+    --sonic-gold-dim:#c79324;
+    --sonic-red:#e0432a;
+    --bone:#f3ede0;
+    --bone-dim:#cdc4ad;
+    --line:rgba(243,237,224,0.14);
+  }
+  *{box-sizing:border-box;margin:0;padding:0;}
+  html,body{background:var(--sonic-green-deep);color:var(--bone);font-family:'Oswald',sans-serif;}
+  body{
+    background:
+      radial-gradient(circle at 15% 0%, rgba(22,115,79,0.35), transparent 45%),
+      radial-gradient(circle at 90% 10%, rgba(253,185,39,0.08), transparent 40%),
+      var(--sonic-green-deep);
+    overflow-x:hidden;
+  }
+  .court-lines{
+    position:fixed;inset:0;pointer-events:none;opacity:0.05;
+    background-image:
+      repeating-linear-gradient(0deg, var(--bone) 0 1px, transparent 1px 80px),
+      repeating-linear-gradient(90deg, var(--bone) 0 1px, transparent 1px 80px);
+    z-index:0;
+  }
+
+  /* ---------- TITLE PAGE ---------- */
+  .title-page{
+    position:relative;min-height:100vh;display:flex;flex-direction:column;
+    align-items:center;justify-content:center;text-align:center;
+    padding:40px 20px;border-bottom:1px solid var(--line);
+    z-index:1;
+  }
+  .eyebrow{
+    font-family:'JetBrains Mono',monospace;letter-spacing:0.35em;
+    font-size:12px;color:var(--sonic-gold);text-transform:uppercase;
+    margin-bottom:28px;
+  }
+  .eyebrow::before{content:"● ";}
+  .title-page h1{
+    font-family:'Anton',sans-serif;
+    font-size:clamp(54px,11vw,150px);
+    line-height:0.92;
+    letter-spacing:0.01em;
+    color:var(--bone);
+    text-shadow:0 0 60px rgba(253,185,39,0.25);
+  }
+  .title-page h1 span{
+    display:block;color:var(--sonic-gold);
+    -webkit-text-stroke:2px var(--sonic-green-bright);
+  }
+  .season-tag{
+    margin-top:30px;font-family:'JetBrains Mono',monospace;
+    font-size:15px;letter-spacing:0.2em;color:var(--bone-dim);
+    border-top:1px solid var(--line);border-bottom:1px solid var(--line);
+    padding:14px 30px;
+  }
+  .season-tag b{color:var(--sonic-gold);}
+  .scroll-cue{
+    position:absolute;bottom:36px;font-family:'JetBrains Mono',monospace;
+    font-size:11px;letter-spacing:0.25em;color:var(--bone-dim);
+    display:flex;flex-direction:column;align-items:center;gap:8px;
+  }
+  .scroll-cue .arrow{width:1px;height:34px;background:linear-gradient(var(--sonic-gold),transparent);}
+  .court-arc{
+    position:absolute; top:50%; left:50%; transform:translate(-50%,-46%);
+    width:min(900px,140vw); height:auto; opacity:0.09; pointer-events:none; z-index:0;
+  }
+  .ticker-strip{
+    width:100%; overflow:hidden; position:relative;
+    border-top:1px solid var(--line); border-bottom:1px solid var(--line);
+    margin-top:36px; padding:12px 0; z-index:1;
+  }
+  .ticker-track{
+    display:flex; width:max-content;
+    animation:tickerScroll 26s linear infinite;
+  }
+  .ticker-item{
+    display:flex; align-items:baseline; gap:10px;
+    font-family:'JetBrains Mono',monospace; font-size:12px; letter-spacing:0.08em;
+    color:var(--bone-dim); white-space:nowrap; padding:0 26px;
+    border-right:1px solid var(--line);
+  }
+  .ticker-item .pk{color:var(--sonic-gold); font-weight:600;}
+  .ticker-item .sc{color:var(--bone);}
+  @keyframes tickerScroll{
+    from{transform:translateX(0);}
+    to{transform:translateX(-50%);}
+  }
+  @media (prefers-reduced-motion: reduce){
+    .ticker-track{animation:none;}
+  }
+
+  /* ---------- SECTION SHELL ---------- */
+  .wrap{position:relative;max-width:1080px;margin:0 auto;padding:90px 24px;z-index:1;}
+  .section-head{margin-bottom:46px;}
+  .section-head .num{
+    font-family:'JetBrains Mono',monospace;color:var(--sonic-gold);
+    font-size:13px;letter-spacing:0.2em;
+  }
+  .section-head h2{
+    font-family:'Anton',sans-serif;font-size:clamp(30px,5vw,52px);
+    letter-spacing:0.01em;margin-top:6px;
+  }
+  .section-head p{color:var(--bone-dim);max-width:560px;margin-top:10px;font-weight:300;}
+
+  /* ---------- DRAFT PICKS ---------- */
+  .picks{display:flex;flex-direction:column;gap:2px;border-top:1px solid var(--line);}
+  .pick-row{
+    display:grid;grid-template-columns:90px 1.4fr 1fr 1fr;align-items:center;
+    gap:18px;padding:22px 18px;border-bottom:1px solid var(--line);
+    background:rgba(243,237,224,0.02);transition:background .2s ease;
+  }
+  .pick-row:hover{background:rgba(253,185,39,0.06);}
+  .pick-num{font-family:'Anton',sans-serif;font-size:38px;color:var(--sonic-green-bright);
+    -webkit-text-stroke:1px var(--sonic-gold);}
+  .pick-name{font-size:21px;font-weight:600;color:var(--bone);}
+  .pick-from{font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--bone-dim);
+    letter-spacing:0.05em;margin-top:3px;text-transform:uppercase;}
+  .pick-stats{display:flex;gap:18px;}
+  .stat{text-align:left;}
+  .stat .v{font-family:'JetBrains Mono',monospace;font-size:20px;color:var(--sonic-gold);font-weight:600;}
+  .stat .l{font-size:10px;letter-spacing:0.15em;color:var(--bone-dim);text-transform:uppercase;}
+  .pick-total{
+    font-family:'JetBrains Mono',monospace;text-align:right;
+  }
+  .pick-total .v{font-size:26px;color:var(--sonic-gold);}
+  .pick-total .l{font-size:10px;color:var(--bone-dim);letter-spacing:0.15em;}
+
+  /* ---------- CHART CARDS ---------- */
+  .grid2{display:grid;grid-template-columns:1.1fr 0.9fr;gap:28px;}
+  .card{
+    background:rgba(243,237,224,0.03);border:1px solid var(--line);
+    border-radius:4px;padding:26px;
+  }
+  .card h3{
+    font-family:'JetBrains Mono',monospace;font-size:12px;letter-spacing:0.18em;
+    color:var(--sonic-gold);text-transform:uppercase;margin-bottom:18px;
+  }
+  canvas{width:100% !important;}
+
+  /* ---------- ROSTER TABLE ---------- */
+  table{width:100%;border-collapse:collapse;font-family:'JetBrains Mono',monospace;font-size:13px;}
+  thead th{
+    text-align:left;padding:10px 12px;color:var(--sonic-gold);
+    font-size:10px;letter-spacing:0.15em;text-transform:uppercase;
+    border-bottom:1px solid var(--line);font-weight:600;
+  }
+  tbody td{padding:13px 12px;border-bottom:1px solid var(--line);color:var(--bone-dim);}
+  tbody tr:hover{background:rgba(253,185,39,0.05);}
+  tbody td.name{color:var(--bone);font-family:'Oswald',sans-serif;font-weight:500;font-size:15px;}
+  .badge{
+    display:inline-block;font-size:9px;letter-spacing:0.1em;padding:3px 8px;
+    border-radius:20px;background:rgba(253,185,39,0.15);color:var(--sonic-gold);
+    border:1px solid rgba(253,185,39,0.35);
+  }
+
+  /* ---------- FOOTER ---------- */
+  footer{
+    text-align:center;padding:60px 24px 80px;color:var(--bone-dim);
+    font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:0.15em;
+    border-top:1px solid var(--line);
+  }
+  footer b{color:var(--sonic-gold);}
+
+  @media(max-width:720px){
+    .grid2{grid-template-columns:1fr;}
+    .pick-row{grid-template-columns:1fr;text-align:left;gap:8px;}
+    .pick-stats{flex-wrap:wrap;}
+    .pick-total{text-align:left;}
+  }
+</style>
+</head>
+<body>
+<div class="court-lines"></div>
+
+<!-- TITLE PAGE -->
+<section class="title-page">
+  <svg class="court-arc" viewBox="0 0 900 500" xmlns="http://www.w3.org/2000/svg">
+    <circle cx="450" cy="250" r="120" fill="none" stroke="var(--sonic-gold)" stroke-width="3"/>
+    <line x1="450" y1="70" x2="450" y2="430" stroke="var(--sonic-gold)" stroke-width="3"/>
+    <path d="M 90 60 A 380 380 0 0 0 90 440" fill="none" stroke="var(--sonic-gold)" stroke-width="3"/>
+    <path d="M 810 60 A 380 380 0 0 1 810 440" fill="none" stroke="var(--sonic-gold)" stroke-width="3"/>
+  </svg>
+  <div class="eyebrow">Expansion Draft Recap</div>
+  <h1>SEATTLE<span>SUPERSONICS</span></h1>
+  <div class="season-tag">THE <b>2024–25</b> SEASON &nbsp;|&nbsp; FRANCHISE №31</div>
+  <div class="ticker-strip">
+    <div class="ticker-track" id="heroTicker"></div>
+  </div>
+  <div class="scroll-cue"><div class="arrow"></div>SCROLL</div>
+</section>
+
+<!-- DRAFT BOARD -->
+<div class="wrap">
+  <div class="section-head">
+    <div class="num">01 — THE HAUL</div>
+    <h2>Draft Board</h2>
+    <p>One player selected from each of five franchises, following the same "one pick per team" rule the NBA used in the 2004 Bobcats expansion draft, ranked by combined points, rebounds, and assists per game.</p>
+  </div>
+  <div class="picks" id="picksTable"></div>
+</div>
+
+<!-- CHARTS -->
+<div class="wrap">
+  <div class="section-head">
+    <div class="num">02 — BY THE NUMBERS</div>
+    <h2>Draft Class Breakdown</h2>
+    <p>How the new core stacks up, and which rosters around the league paid the expansion tax.</p>
+  </div>
+  <div class="grid2">
+    <div class="card">
+      <h3>Production per Pick (PPG / RPG / APG)</h3>
+      <canvas id="statsChart" height="260"></canvas>
+    </div>
+    <div class="card">
+      <h3>Ranked by Combined Score</h3>
+      <canvas id="lossChart" height="260"></canvas>
+    </div>
+  </div>
+</div>
+
+<!-- ROSTER -->
+<div class="wrap">
+  <div class="section-head">
+    <div class="num">03 — INAUGURAL ROSTER</div>
+    <h2>Seattle SuperSonics</h2>
+    <p>The five names that put on the green and gold for year one.</p>
+  </div>
+  <table>
+    <thead>
+      <tr><th>Player</th><th>Acquired From</th><th>PPG</th><th>RPG</th><th>APG</th><th>Status</th></tr>
+    </thead>
+    <tbody id="rosterBody"></tbody>
+  </table>
+</div>
+
+<!-- METHODOLOGY -->
+<div class="wrap">
+  <div class="section-head">
+    <div class="num">04 — METHODOLOGY</div>
+    <h2>How This Draft Was Built</h2>
+    <p>The rules, the math, and where every number came from.</p>
+  </div>
+
+  <div class="card" style="margin-bottom:20px;">
+    <h3>The Model</h3>
+    <p style="color:var(--bone-dim); line-height:1.7; font-weight:300;">
+      This is a hypothetical exercise, not an NBA-sanctioned event. It's built on the same
+      structure the league actually used the last time it expanded: the
+      <strong style="color:var(--bone);">2004 Charlotte Bobcats expansion draft</strong>.
+      Under those real rules, each existing team could protect up to 8 players, and the
+      expansion team could select <strong style="color:var(--bone);">only one player per
+      franchise</strong>. This project applies that same one-per-team cap across a 6-team
+      talent pool (Cavaliers, Celtics, Thunder, Rockets, Knicks, Lakers). For each team,
+      the highest-scoring available player is identified, and the top 5 of those
+      team-best players, ranked by combined production, become the picks.
+    </p>
+    <p style="color:var(--bone-dim); line-height:1.7; font-weight:300; margin-top:14px;">
+      <strong style="color:var(--sonic-gold);">Scope note:</strong> the real Bobcats
+      draft selected 19 players from 29 teams; a real Seattle expansion draft would
+      likely pull 14–15 players from a much larger league-wide pool. This project
+      intentionally stops at a <strong style="color:var(--bone);">"core five"</strong>,
+      one pick per team across a 6-team sample pool, to keep the math fully visible
+      rather than simulating a full 15-man roster from partial data. Think of it as the
+      headline picks of a larger draft, not the complete inaugural roster.
+    </p>
+  </div>
+
+  <div class="card" style="margin-bottom:20px;">
+    <h3>The Formula</h3>
+    <p style="color:var(--bone-dim); line-height:1.7; font-weight:300;">
+      Each player's <strong style="color:var(--bone);">Combined Score</strong> is simply
+      Points + Rebounds + Assists per game (all 2024–25 regular season averages). This is
+      a deliberately simple, transparent stat, not an advanced metric like PER or Win
+      Shares, chosen so the math behind every pick is visible and checkable at a glance.
+      A more rigorous model would weight defense, efficiency, and positional need, but
+      this keeps the exercise readable for a general audience.
+    </p>
+    <div style="margin-top:16px; padding:16px; background:rgba(253,185,39,0.06); border:1px solid rgba(253,185,39,0.2); border-radius:3px;">
+      <p style="font-family:'JetBrains Mono',monospace; font-size:11px; color:var(--sonic-gold); letter-spacing:0.1em; text-transform:uppercase; margin-bottom:10px;">Worked example: Pick #1</p>
+      <p style="color:var(--bone-dim); line-height:1.8; font-weight:300; font-family:'JetBrains Mono',monospace; font-size:13px;">
+        Payton Pritchard averaged <strong style="color:var(--bone);">14.3 PPG</strong>,
+        <strong style="color:var(--bone);">3.8 RPG</strong>, and
+        <strong style="color:var(--bone);">3.5 APG</strong> in 2024–25 (NBA.com).<br>
+        14.3 + 3.8 + 3.5 = <strong style="color:var(--sonic-gold);">21.6</strong><br>
+        That 21.6 was the highest Combined Score of any single-team-best player in the
+        pool, so Boston's best available player becomes Seattle's Pick #1.
+      </p>
+    </div>
+  </div>
+
+  <div class="card" style="margin-bottom:20px;">
+    <h3>Assumptions &amp; Limitations</h3>
+    <ul style="color:var(--bone-dim); line-height:1.9; font-weight:300; padding-left:20px; font-size:14px;">
+      <li>Stats are full-season 2024–25 regular-season averages. <strong style="color:var(--bone);">Caris LeVert</strong> was traded from Cleveland to Atlanta mid-season (Feb 6, 2025); his line reflects his combined season across both teams, not Cleveland alone.</li>
+      <li>Combined Score treats points, rebounds, and assists as equally weighted, which favors high-usage guards over low-stat defensive specialists (e.g. Alex Caruso, a plus defender, ranks lower under this formula despite his impact).</li>
+      <li>Player pool is limited to 5 bench/rotation players per team as originally selected for this project, not each team's full roster, so a "best available" pick reflects the best of that curated list, not literally every player on the team.</li>
+      <li>No salary cap, positional need, injury history, or trade compensation is modeled, all of which are real factors in an actual expansion draft.</li>
+    </ul>
+  </div>
+
+  <div class="card">
+    <h3>Sources</h3>
+    <p style="color:var(--bone-dim); line-height:1.7; font-weight:300; margin-bottom:14px;">
+      All player statistics are real, verified 2024–25 regular season per-game averages. Each pick's source:
+    </p>
+    <table style="margin-bottom:14px;">
+      <thead>
+        <tr><th>Player</th><th>Stat Line</th><th>Source</th></tr>
+      </thead>
+      <tbody>
+        <tr><td class="name">Payton Pritchard</td><td>14.3 / 3.8 / 3.5</td><td>NBA.com (2024–25 Sixth Man of the Year release)</td></tr>
+        <tr><td class="name">Tari Eason</td><td>12.0 / 6.4 / 1.5</td><td>RotoWire season recap; corroborated by Basketball-Reference</td></tr>
+        <tr><td class="name">Rui Hachimura</td><td>13.1 / 5.0 / 1.3</td><td>Wikipedia (Basketball-Reference-sourced season stats); RotoWire</td></tr>
+        <tr><td class="name">Caris LeVert</td><td>12.1 / 3.2 / 3.4</td><td>StatMuse (combined CLE/ATL 2024–25 season)</td></tr>
+        <tr><td class="name">Isaiah Joe</td><td>11.7 / 2.6 / 1.7</td><td>Basketball-Reference</td></tr>
+      </tbody>
+    </table>
+    <p style="color:var(--bone-dim); line-height:1.7; font-weight:300;">
+      Expansion draft rules referenced from the
+      <strong style="color:var(--bone);">2004 NBA Expansion Draft (Charlotte Bobcats)</strong>,
+      per Wikipedia, Spotrac, and Forbes' coverage of the format. Notably, the NBA has
+      reportedly explored real expansion to Seattle and Las Vegas for the 2028–29 season,
+      making this exercise a timely (if unofficial) preview of what that process could look like.
+    </p>
+  </div>
+</div>
+
+<footer>
+  SEATTLE SUPERSONICS &nbsp;·&nbsp; <b>2024–25 EXPANSION DRAFT</b> &nbsp;·&nbsp; RETURN OF THE SONICS<br>
+  <span style="opacity:0.6;">Hypothetical fan project · Not affiliated with or endorsed by the NBA</span><br>
+  <span style="opacity:0.6; font-size:10px; margin-top:6px; display:inline-block;">Created by <span style="color:var(--sonic-gold); font-size:13px; letter-spacing:0.08em;">Munisatya Punleau Sek&trade;</span></span>
+</footer>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.0/chart.umd.min.js"></script>
+<script>
+const picks = [
+  {name:"Payton Pritchard", from:"Boston Celtics", ppg:14.3, rpg:3.8, apg:3.5},
+  {name:"Tari Eason", from:"Houston Rockets", ppg:12.0, rpg:6.4, apg:1.5},
+  {name:"Rui Hachimura", from:"LA Lakers", ppg:13.1, rpg:5.0, apg:1.3},
+  {name:"Caris LeVert", from:"Cleveland Cavaliers", ppg:12.1, rpg:3.2, apg:3.4},
+  {name:"Isaiah Joe", from:"OKC Thunder", ppg:11.7, rpg:2.6, apg:1.7},
+];
+
+const picksTable = document.getElementById('picksTable');
+picks.forEach((p,i)=>{
+  const total = (p.ppg+p.rpg+p.apg).toFixed(1);
+  picksTable.innerHTML += `
+    <div class="pick-row">
+      <div class="pick-num">${String(i+1).padStart(2,'0')}</div>
+      <div>
+        <div class="pick-name">${p.name}</div>
+        <div class="pick-from">from ${p.from}</div>
+      </div>
+      <div class="pick-stats">
+        <div class="stat"><div class="v">${p.ppg.toFixed(1)}</div><div class="l">PPG</div></div>
+        <div class="stat"><div class="v">${p.rpg.toFixed(1)}</div><div class="l">RPG</div></div>
+        <div class="stat"><div class="v">${p.apg.toFixed(1)}</div><div class="l">APG</div></div>
+      </div>
+      <div class="pick-total"><div class="v">${total}</div><div class="l">COMBINED</div></div>
+    </div>`;
+});
+
+// Hero ticker: built from the same picks array (single source of truth),
+// duplicated once for a seamless infinite scroll loop.
+const heroTicker = document.getElementById('heroTicker');
+const tickerHTML = picks.map((p,i)=>{
+  const total = (p.ppg+p.rpg+p.apg).toFixed(1);
+  return `<div class="ticker-item"><span class="pk">PICK ${String(i+1).padStart(2,'0')}</span> ${p.name.toUpperCase()} <span class="sc">${total}</span></div>`;
+}).join('');
+heroTicker.innerHTML = tickerHTML + tickerHTML;
+
+const rosterBody = document.getElementById('rosterBody');
+picks.forEach(p=>{
+  rosterBody.innerHTML += `
+    <tr>
+      <td class="name">${p.name}</td>
+      <td>${p.from}</td>
+      <td>${p.ppg.toFixed(1)}</td>
+      <td>${p.rpg.toFixed(1)}</td>
+      <td>${p.apg.toFixed(1)}</td>
+      <td><span class="badge">SIGNED</span></td>
+    </tr>`;
+});
+
+const goldA = 'rgba(253,185,39,0.9)';
+const goldB = 'rgba(253,185,39,0.55)';
+const goldC = 'rgba(253,185,39,0.3)';
+const greenLine = 'rgba(22,115,79,0.9)';
+
+function buildCharts(){
+  new Chart(document.getElementById('statsChart'), {
+    type:'bar',
+    data:{
+      labels: picks.map(p=>p.name.split(' ').slice(-1)[0]),
+      datasets:[
+        {label:'PPG', data:picks.map(p=>p.ppg), backgroundColor:goldA},
+        {label:'RPG', data:picks.map(p=>p.rpg), backgroundColor:goldB},
+        {label:'APG', data:picks.map(p=>p.apg), backgroundColor:goldC},
+      ]
+    },
+    options:{
+      responsive:true,
+      layout:{ padding:{ left:4 } },
+      plugins:{ legend:{ labels:{ color:'#cdc4ad', font:{family:'JetBrains Mono',size:10} } } },
+      scales:{
+        x:{ ticks:{ color:'#cdc4ad', font:{family:'JetBrains Mono',size:10} }, grid:{ color:'rgba(243,237,224,0.06)' } },
+        y:{ ticks:{ color:'#cdc4ad', font:{family:'JetBrains Mono',size:10} }, grid:{ color:'rgba(243,237,224,0.06)' } }
+      }
+    }
+  });
+
+  new Chart(document.getElementById('lossChart'), {
+    type:'bar',
+    data:{
+      labels:picks.map(p=>p.name.split(' ').slice(-1)[0]),
+      datasets:[{
+        label:'Combined Score',
+        data:picks.map(p=>+(p.ppg+p.rpg+p.apg).toFixed(1)),
+        backgroundColor:['#fdb927','#c79324','#16734f','#0a3d2c','#e0432a'],
+        borderRadius:3
+      }]
+    },
+    options:{
+      indexAxis:'y',
+      responsive:true,
+      layout:{ padding:{ left:4 } },
+      plugins:{ legend:{ display:false } },
+      scales:{
+        x:{ ticks:{ color:'#cdc4ad', font:{family:'JetBrains Mono',size:10} }, grid:{ color:'rgba(243,237,224,0.06)' } },
+        y:{ ticks:{ color:'#cdc4ad', font:{family:'JetBrains Mono',size:11}, crossAlign:'far' }, grid:{ display:false } }
+      }
+    }
+  });
+}
+
+// Wait for the JetBrains Mono web font to actually finish loading before
+// Chart.js measures label widths. If charts build too early, Chart.js sizes
+// the axis based on a fallback font's (narrower) metrics, then the real
+// font renders wider and the left edge of longer names gets clipped.
+if(document.fonts && document.fonts.ready){
+  document.fonts.ready.then(buildCharts);
+} else {
+  buildCharts();
+}
+</script>
+</body>
+</html>
